@@ -2,7 +2,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import dash
 from dash import dcc, html, Dash
 from dash.dependencies import Input, Output
 import dash_daq as daq
@@ -30,80 +29,7 @@ date_buttons = [
     {'step': 'all', 'label': 'All'}
 ]
 
-# #Graphs (Line)
-# line_temp_fig = make_subplots(rows=2, cols=1, shared_xaxes=True)
-# line_temp_fig.append_trace(go.Scatter(x=weather_data['Formatted Date'], y=weather_data['Temperature (C)'], mode='lines', name='Air Temp'), row=1, col=1)
-# line_temp_fig.append_trace(go.Scatter(x=weather_data['Formatted Date'], y=weather_data['Apparent Temperature (C)'], mode='lines', name='Apparent Air Temp'), row=1, col=1)
-# line_temp_fig.append_trace(go.Scatter(x=weather_data['Formatted Date'], y=weather_data['Humidity'], mode='lines', name='Humidity'), row=2, col=1)
-# line_temp_fig.update_xaxes(title_text='Date')
-# line_temp_fig.update_layout(
-#     {'xaxis':
-#         {'rangeselector':
-#             {'buttons': date_buttons}}}
-# )
-
-line_temp_fig_2 = go.Figure()
-# line_temp_fig_2.add_trace(go.Scatter(x=weather_data.index, y=weather_data['Temperature (C)'], mode='lines'))
-# line_temp_fig_2.update_xaxes(title_text='Date')
-# line_temp_fig_2.update_yaxes(title_text='Temperature (C)')
-# line_temp_fig_2.update_layout(
-#     {'xaxis':
-#         {'rangeselector':
-#             {'buttons': date_buttons,
-#             'bgcolor': 'black'}
-#         }
-#     },
-#     margin={'l': 20, 'r': 20, 't': 20, 'b': 20},
-#     paper_bgcolor= '#1f2c56',
-#     font_color= 'white',
-#     title={
-#         'text': "Temperature history over time",
-#         'y':0.9,
-#         'x':0.5,
-#         'xanchor': 'center',
-#         'yanchor': 'top',
-#     },
-#     updatemenus=[
-#         dict(
-#             type="buttons",
-#             direction="down",
-#             x=1.1,
-#             y=0.8,
-#             showactive=True,
-#             font={'color': '#192444'},
-#             bgcolor='#BBB',
-#             buttons=list(
-#                 [
-#                     dict(
-#                         label="H",
-#                         method="update",
-#                         args=[{
-#                             "x": [hourly_summary.index],
-#                             "y": [hourly_summary['Temperature (C)']]
-#                         }],
-#                     ),
-#                     dict(
-#                         label="D",
-#                         method="update",
-#                         args=[{
-#                             "x": [daily_summary.index],
-#                             "y": [daily_summary['Temperature (C)']]
-#                         }],
-#                     ),
-#                     dict(
-#                         label="W",
-#                         method="update",
-#                         args=[{
-#                             "x": [weekly_summary.index],
-#                             "y": [weekly_summary['Temperature (C)']]
-#                         }],
-#                     ),
-#                 ]
-#             ),
-#         )
-#     ]
-# )
-
+line_temp_fig = go.Figure()
 
 #Graphs (Indicator)
 indicator_fig_1 = go.Figure()
@@ -149,25 +75,12 @@ indicator_fig_2 = daq.Gauge(
     max=100,
 )
 
-# indicator_fig_3 = go.Figure()
-# indicator_fig_3.add_trace(go.Indicator(
-#     mode = "gauge+number",
-#     value = 60,
-#     number = {'suffix': ' km/h'},
-#     domain = {'x': [0, 1], 'y': [0, 1]},
-#     title = {'text': "Speed of wind (km/h)"}
-# ))
-# indicator_fig_3.update_layout(
-#     paper_bgcolor= '#1f2c56',
-#     font_color= 'white',
-# )
-
 
 # Dashboard web app
 app = Dash(__name__)
 
-#App Layout
-app.layout = html.Div(id='major_container', children=[
+# NAV TEST
+DASHBOARD_FARM = html.Div(id='major_container', children=[
     html.Div(id='live_data_container', children=[
         html.Div(className='live_data', children=[
             html.H3("Air Temp"),
@@ -204,22 +117,16 @@ app.layout = html.Div(id='major_container', children=[
                 value = 'assets/img1.jpg',
                 clearable = False
             ),
-            # html.H2(className='container_title', children=['Farm Cameras']),
-                # html.H2('Camera 1'),
-                html.Img(id='farm_image', src=app.get_asset_url('img1.jpg'))
+            html.Img(id='farm_image', src=app.get_asset_url('img1.jpg'))
         ]),
         html.Div(id='indicator_container', children=[
             dcc.Graph(className='indicator', figure=indicator_fig_1),
             indicator_fig_2,
-            # dcc.Graph(className='indicator', figure=indicator_fig_3),
         ]),
     ]),
     
 
     html.Div(id='history', children=[
-        # html.Div(
-        #     dcc.Graph(className='line_graph', figure=line_temp_fig)
-        # ),
         html.Div(className='graph_container', children=[
             dcc.Dropdown(id='line_plot_dropdown',
                 options=[
@@ -232,7 +139,7 @@ app.layout = html.Div(id='major_container', children=[
             ),
             dcc.Graph(
                 id='dynamic_plot',
-                figure=line_temp_fig_2,
+                figure=line_temp_fig,
                 config={
                     'displayModeBar': False
                 }
@@ -240,6 +147,9 @@ app.layout = html.Div(id='major_container', children=[
         ])
     ])
 ])
+
+#App Layout
+app.layout = DASHBOARD_FARM
 
 # Camera Callback
 @app.callback(
