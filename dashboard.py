@@ -1,9 +1,9 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import Input, Output, dcc, html
-from pages import farm_dashboard
+from pages import farm_dashboard, energy_dashboard, security_dashboard, home
 
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
@@ -22,6 +22,7 @@ CONTENT_STYLE = {
     "margin-left": "18rem",
     "margin-right": "2rem",
     "padding": "2rem 1rem",
+    "color": "white",
 }
 
 sidebar = html.Div(
@@ -35,7 +36,8 @@ sidebar = html.Div(
             [
                 dbc.NavLink("Home", href="/", active="exact"),
                 dbc.NavLink("Farm", href="/farm", active="exact"),
-                dbc.NavLink("Page 2", href="/page-2", active="exact"),
+                dbc.NavLink("Energy", href="/energy", active="exact"),
+                dbc.NavLink("Security", href="/security", active="exact"),
             ],
             vertical=True,
             pills=True,
@@ -46,17 +48,22 @@ sidebar = html.Div(
 
 content = html.Div(id="page-content", style=CONTENT_STYLE)
 
-app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+def serve_layout():
+    return html.Div([dcc.Location(id="url"), sidebar, content])
+
+app.layout = serve_layout
 
 
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
-        return html.P("This is the content of the home page!")
+        return home.layout
     elif pathname == "/farm":
         return farm_dashboard.layout
-    elif pathname == "/farm":
-        return html.P("Oh cool, this is page 2!")
+    elif pathname == "/energy":
+        return energy_dashboard.layout
+    elif pathname == "/security":
+        return security_dashboard.layout
     # If the user tries to reach a different page, return a 404 message
     return html.Div(
         [
@@ -69,4 +76,4 @@ def render_page_content(pathname):
 
 
 if __name__ == "__main__":
-    app.run_server()
+    app.run_server(debug=True)
