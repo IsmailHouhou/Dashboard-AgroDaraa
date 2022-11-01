@@ -76,36 +76,36 @@ indicator_fig_2 = daq.Gauge(
 )
 
 # NAV TEST
-layout = html.Div(id='major_container', children=[
-    html.Div(id='live_data_container', children=[
-        html.Div(className='live_data', children=[
-            html.H3("Air Temp"),
+layout = html.Div(id='farm_major_container', children=[
+    html.Div(id='farm_live_data_container', children=[
+        html.Div(className='farm_live_data', children=[
+            html.H4("Air Temp"),
             html.Span(round(weather_data['Temperature (C)'][0], 2)),
             html.Span(' C')
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("GreenHouse Temp"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("GreenHouse Temp"),
             html.Span(round(weather_data['Apparent Temperature (C)'][0], 2)),
             html.Span(' C')
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Humidity"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("Humidity"),
             html.Span(round(weather_data['Humidity'][0], 2))
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Wind Speed"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("Wind Speed"),
             html.Span(round(weather_data['Wind Speed (km/h)'][0], 2)),
             html.Span(' km/h')
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Wind Direction"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("Wind Direction"),
             html.Span(round(weather_data['Wind Bearing (degrees)'][0], 2))
         ]),
     ]),
 
-    html.Div(id='camera_indicator', children=[
-        html.Div(id='camera_container', children=[
-            dcc.Dropdown(id='camera_dropdown',
+    html.Div(id='farm_camera_indicator', children=[
+        html.Div(id='farm_camera_container', children=[
+            dcc.Dropdown(id='farm_camera_dropdown',
                 options=[
                     {'label': 'Camera 1', 'value': 'assets/img1.jpg'},
                     {'label': 'Camera 2', 'value': 'assets/img2.jpg'}
@@ -115,16 +115,16 @@ layout = html.Div(id='major_container', children=[
             ),
             html.Img(id='farm_image', src='assets\img1.jpg')
         ]),
-        html.Div(id='indicator_container', children=[
-            dcc.Graph(className='indicator', figure=indicator_fig_1),
+        html.Div(id='farm_indicator_container', children=[
+            dcc.Graph(className='farm_indicator', figure=indicator_fig_1),
             indicator_fig_2,
         ]),
     ]),
     
 
-    html.Div(id='history', children=[
-        html.Div(className='graph_container', children=[
-            dcc.Dropdown(id='line_plot_dropdown',
+    html.Div(id='farm_history', children=[
+        html.Div(className='farm_graph_container', children=[
+            dcc.Dropdown(id='farm_line_plot_dropdown',
                 options=[
                     {'label': 'Temperature', 'value': 'Temperature (C)'},
                     {'label': 'Apparnet Temp', 'value': 'Apparent Temperature (C)'},
@@ -134,7 +134,7 @@ layout = html.Div(id='major_container', children=[
                 clearable = False
             ),
             dcc.Graph(
-                id='dynamic_plot',
+                id='farm_line_plot',
                 figure=line_temp_fig,
                 config={
                     'displayModeBar': False
@@ -148,7 +148,7 @@ layout = html.Div(id='major_container', children=[
 # Camera Callback
 @callback(
     Output(component_id='farm_image', component_property='src'),
-    Input(component_id='camera_dropdown', component_property='value')
+    Input(component_id='farm_camera_dropdown', component_property='value')
 )
 def update_image(option):
     src='assets/img1.jpg'
@@ -158,8 +158,8 @@ def update_image(option):
 
 # Plot Callback
 @callback(
-    Output(component_id='dynamic_plot', component_property='figure'),
-    Input(component_id='line_plot_dropdown', component_property='value')
+    Output(component_id='farm_line_plot', component_property='figure'),
+    Input(component_id='farm_line_plot_dropdown', component_property='value')
 )
 def update_plot(option):
     title='Temperature (C)'
