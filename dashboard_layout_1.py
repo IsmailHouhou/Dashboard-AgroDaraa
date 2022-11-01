@@ -76,6 +76,8 @@ indicator_fig_2 = daq.Gauge(
 )
 
 # this is the new branch
+# I am still in the new branch and I hope it's not in the master branch
+
 
 # Dashboard web app
 app = Dash(__name__)
