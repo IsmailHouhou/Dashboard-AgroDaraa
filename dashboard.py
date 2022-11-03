@@ -5,27 +5,7 @@ from pages import farm_dashboard, energy_dashboard, security_dashboard, home
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
-# the style arguments for the sidebar. We use position:fixed and a fixed width
-SIDEBAR_STYLE = {
-    "position": "fixed",
-    "top": 0,
-    "left": 0,
-    "bottom": 0,
-    "width": "16rem",
-    "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
-}
-
-# the styles for the main content position it to the right of the sidebar and
-# add some padding.
-CONTENT_STYLE = {
-    "margin-left": "18rem",
-    "margin-right": "2rem",
-    "padding": "2rem 1rem",
-    "color": "white",
-}
-
-sidebar = html.Div(
+sidebar = html.Div(id="navbar", children=
     [
         html.H2("Sidebar", className="display-4"),
         html.Hr(),
@@ -34,7 +14,6 @@ sidebar = html.Div(
         ),
         dbc.Nav(
             [
-                dbc.NavLink("Home", href="/", active="exact"),
                 dbc.NavLink("Farm", href="/farm", active="exact"),
                 dbc.NavLink("Energy", href="/energy", active="exact"),
                 dbc.NavLink("Security", href="/security", active="exact"),
@@ -43,10 +22,9 @@ sidebar = html.Div(
             pills=True,
         ),
     ],
-    style=SIDEBAR_STYLE,
 )
 
-content = html.Div(id="page-content", style=CONTENT_STYLE)
+content = html.Div(id="page_content")
 
 def serve_layout():
     return html.Div([dcc.Location(id="url"), sidebar, content])
@@ -54,7 +32,21 @@ def serve_layout():
 app.layout = serve_layout
 
 
-@app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+# Hide sidebar when at Home
+@app.callback(
+    Output("page_content", "id"),
+    Output("navbar", "id"),
+    Input("url", "pathname")
+)
+def page_content_extention(pathname):
+    if pathname== '/':
+        return 'home_page_content', 'home_navbar_display'
+    else:
+        return 'page_content', 'navbar'
+
+
+# Navigation Sidebar
+@app.callback(Output("page_content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
         return home.layout

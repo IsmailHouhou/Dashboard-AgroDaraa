@@ -1,9 +1,8 @@
 from dash import dcc, html
 
 
-layout = html.Div(children=[
-    html.H3("click here to go to the farm dashboard"),
-    dcc.Link(html.Button("Farm"), href="/farm", refresh=True),
-    dcc.Link(html.Button("Energy"), href="/energy", refresh=True),
-    dcc.Link(html.Button("security"), href="/security", refresh=True),
+layout = html.Div(id='home_div', children=[
+    dcc.Link("Farm", href="/farm", refresh=True, className='home_button'),
+    dcc.Link("Energy", href="/energy", refresh=True, className='home_button'),
+    dcc.Link("security", href="/security", refresh=True, className='home_button'),
 ])
