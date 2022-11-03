@@ -60,33 +60,23 @@ indicator_fig_1.update_layout(
     margin={'l': 20, 'r': 20, 't': 50, 'b': 20},
 )
 
-indicator_fig_2 = daq.Gauge(
-    color={
-        'default': 'white',
-        'gradient':False,
-        'ranges': {"#636efa":[0,50],"orange":[50,80],"red":[80,100]},
-    },
-    size=180,
-    showCurrentValue=True,
-    value=88,
-    scale={'start': 0, 'interval': 10, 'labelInterval': 2},
-    label={'label': 'Wind Speed (km/h)', 'style': {'font-size': '20px'}},
-    min=0,
-    max=100,
-)
 
 # NAV TEST
 layout = html.Div(id='farm_major_container', children=[
     html.Div(id='farm_live_data_container', children=[
         html.Div(className='farm_live_data', children=[
             html.H4("Air Temp"),
-            html.Span(round(weather_data['Temperature (C)'][0], 2)),
-            html.Span(' C')
+            html.Div(children=[
+                html.Span(round(weather_data['Temperature (C)'][0], 2)),
+                html.Span(' C')
+            ])
         ]),
         html.Div(className='farm_live_data', children=[
             html.H4("GreenHouse Temp"),
-            html.Span(round(weather_data['Apparent Temperature (C)'][0], 2)),
-            html.Span(' C')
+            html.Div(children=[
+                html.Span(round(weather_data['Apparent Temperature (C)'][0], 2)),
+                html.Span(' C')
+            ])
         ]),
         html.Div(className='farm_live_data', children=[
             html.H4("Humidity"),
@@ -94,8 +84,10 @@ layout = html.Div(id='farm_major_container', children=[
         ]),
         html.Div(className='farm_live_data', children=[
             html.H4("Wind Speed"),
-            html.Span(round(weather_data['Wind Speed (km/h)'][0], 2)),
-            html.Span(' km/h')
+            html.Div(children=[
+                html.Span(round(weather_data['Wind Speed (km/h)'][0], 2)),
+                html.Span(' km/h')
+            ])
         ]),
         html.Div(className='farm_live_data', children=[
             html.H4("Wind Direction"),
@@ -117,7 +109,20 @@ layout = html.Div(id='farm_major_container', children=[
         ]),
         html.Div(id='farm_indicator_container', children=[
             dcc.Graph(className='farm_indicator', figure=indicator_fig_1),
-            indicator_fig_2,
+            daq.Gauge(
+                color={
+                    'default': 'white',
+                    'gradient':False,
+                    'ranges': {"#636efa":[0,50],"orange":[50,80],"red":[80,100]},
+                },
+                size=180,
+                showCurrentValue=True,
+                value=88,
+                scale={'start': 0, 'interval': 10, 'labelInterval': 2},
+                label={'label': 'Wind Speed (km/h)', 'style': {'font-size': '20px'}},
+                min=0,
+                max=100,
+            ),
         ]),
     ]),
     
