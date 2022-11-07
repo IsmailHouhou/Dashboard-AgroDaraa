@@ -1,89 +1,62 @@
-body {
-    padding: 0;
-    margin: 0;
-    background-color: #192444;
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 16rem;
+    padding: 2rem 1rem;
+    background-color: #f8f9fa;
+}
+
+#page_content {
+    height: 100vh;
+    margin-left: 18rem;
+    margin-right: 2rem;
+    padding: 2rem 1rem;
     color: white;
 }
 
-#major_container {
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: space-between;
-    /* height: 100%; */
-    margin: 50px 64px 50px 64px;
-}
-
-/* Live Data Container */
-#live_data_container {
+#home_div {
+    height: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
-    height: 100px;
-    width: 100%;
-    margin-bottom: 30px;
+    align-items: center;
 }
 
-.live_data {
-    background-color: #1f2c56;
-    padding: 2px 20px 20px 20px;
-    width: 170px;
+.home_button {
+    flex-basis: 200px;
+    height: 200px;
+    flex-grow: 1;
+    margin: 10px;
+    border: 0px;
+    border-radius: 10px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.6);
+
     text-align: center;
-    border-radius: 10px;
+    line-height: 200px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    
+    background-color: violet;
+    color: white;
+}
+.home_button:hover {
+    color: white;
 }
 
-#camera_indicator {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 30px;
+#home_navbar_display {
+    display: none;
 }
 
-/* Camera Container */
-#camera_container {
-    width: 40%;
-    background-color: #1f2c56;
-    padding: 10px 20px;
-    border-radius: 10px;
-}
-#camera_dropdown {
-    width: 200px;
-    margin-bottom: 20px;
-    color: #192444;
-}
-#farm_image {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-}
-
-/* Indicator Container */
-#indicator_container {
-    display: flex;
-    flex-flow: row wrap;
-    background-color: #1f2c56;
-    border-radius: 10px;
-    padding: 20px 20px 0 20px;
-    height: 240px;
-}
-.indicator {
-    height: 170px;
-    width: 250px;
-    margin-right: 30px;
-}
-
-/* Plot Container */
-#history {
-    width: 100%;
-    background-color: #1f2c56;
-    padding-bottom: 10px;
-    border-radius: 10px;
-}
-#line_plot_dropdown {
-    width: 200px;
-    margin: 20px;
-    color: #192444;
-}
-#dynamic_plot {
-    height: 300px;
+#home_page_content {
+    height: 100vh;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 2rem 1rem;
+    color: white;
 }

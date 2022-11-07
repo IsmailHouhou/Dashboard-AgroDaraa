@@ -2,13 +2,13 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from dash import dcc, html, Dash
+from dash import dcc, html, Dash, callback
 from dash.dependencies import Input, Output
 import dash_daq as daq
 
 #data import
 weather_data = pd.read_csv('weatherHistory.csv')
-
+weather_data = weather_data[['Formatted Date', 'Temperature (C)', 'Apparent Temperature (C)', 'Humidity', 'Wind Speed (km/h)', 'Wind Bearing (degrees)', 'Visibility (km)', 'Loud Cover', 'Pressure (millibars)']]
 #data Formatting
 weather_data['Formatted Date'] = pd.to_datetime(weather_data['Formatted Date'].str[:-10])
 weather_data = weather_data.sort_values(by='Formatted Date', ascending=False)
@@ -60,59 +60,44 @@ indicator_fig_1.update_layout(
     margin={'l': 20, 'r': 20, 't': 50, 'b': 20},
 )
 
-indicator_fig_2 = daq.Gauge(
-    color={
-        'default': 'white',
-        'gradient':False,
-        'ranges': {"#636efa":[0,50],"orange":[50,80],"red":[80,100]},
-    },
-    size=180,
-    showCurrentValue=True,
-    value=88,
-    scale={'start': 0, 'interval': 10, 'labelInterval': 2},
-    label={'label': 'Wind Speed (km/h)', 'style': {'font-size': '20px'}},
-    min=0,
-    max=100,
-)
-
-# this is the new branch
-# I am still in the new branch and I hope it's not in the master branch
-
-
-# Dashboard web app
-app = Dash(__name__)
 
 # NAV TEST
-DASHBOARD_FARM = html.Div(id='major_container', children=[
-    html.Div(id='live_data_container', children=[
-        html.Div(className='live_data', children=[
-            html.H3("Air Temp"),
-            html.Span(round(weather_data['Temperature (C)'][0], 2)),
-            html.Span(' C')
+layout = html.Div(id='farm_major_container', children=[
+    html.Div(id='farm_live_data_container', children=[
+        html.Div(className='farm_live_data', children=[
+            html.H4("Air Temp"),
+            html.Div(children=[
+                html.Span(round(weather_data['Temperature (C)'][0], 2)),
+                html.Span(' C')
+            ])
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("GreenHouse Temp"),
-            html.Span(round(weather_data['Apparent Temperature (C)'][0], 2)),
-            html.Span(' C')
+        html.Div(className='farm_live_data', children=[
+            html.H4("GreenHouse Temp"),
+            html.Div(children=[
+                html.Span(round(weather_data['Apparent Temperature (C)'][0], 2)),
+                html.Span(' C')
+            ])
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Humidity"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("Humidity"),
             html.Span(round(weather_data['Humidity'][0], 2))
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Wind Speed"),
-            html.Span(round(weather_data['Wind Speed (km/h)'][0], 2)),
-            html.Span(' km/h')
+        html.Div(className='farm_live_data', children=[
+            html.H4("Wind Speed"),
+            html.Div(children=[
+                html.Span(round(weather_data['Wind Speed (km/h)'][0], 2)),
+                html.Span(' km/h')
+            ])
         ]),
-        html.Div(className='live_data', children=[
-            html.H3("Wind Direction"),
+        html.Div(className='farm_live_data', children=[
+            html.H4("Wind Direction"),
             html.Span(round(weather_data['Wind Bearing (degrees)'][0], 2))
         ]),
     ]),
 
-    html.Div(id='camera_indicator', children=[
-        html.Div(id='camera_container', children=[
-            dcc.Dropdown(id='camera_dropdown',
+    html.Div(id='farm_camera_indicator', children=[
+        html.Div(id='farm_camera_container', children=[
+            dcc.Dropdown(id='farm_camera_dropdown',
                 options=[
                     {'label': 'Camera 1', 'value': 'assets/img1.jpg'},
                     {'label': 'Camera 2', 'value': 'assets/img2.jpg'}
@@ -120,18 +105,31 @@ DASHBOARD_FARM = html.Div(id='major_container', children=[
                 value = 'assets/img1.jpg',
                 clearable = False
             ),
-            html.Img(id='farm_image', src=app.get_asset_url('img1.jpg'))
+            html.Img(id='farm_image', src='assets\img1.jpg')
         ]),
-        html.Div(id='indicator_container', children=[
-            dcc.Graph(className='indicator', figure=indicator_fig_1),
-            indicator_fig_2,
+        html.Div(id='farm_indicator_container', children=[
+            dcc.Graph(className='farm_indicator', figure=indicator_fig_1),
+            daq.Gauge(
+                color={
+                    'default': 'white',
+                    'gradient':False,
+                    'ranges': {"#636efa":[0,50],"orange":[50,80],"red":[80,100]},
+                },
+                size=180,
+                showCurrentValue=True,
+                value=88,
+                scale={'start': 0, 'interval': 10, 'labelInterval': 2},
+                label={'label': 'Wind Speed (km/h)', 'style': {'font-size': '20px'}},
+                min=0,
+                max=100,
+            ),
         ]),
     ]),
     
 
-    html.Div(id='history', children=[
-        html.Div(className='graph_container', children=[
-            dcc.Dropdown(id='line_plot_dropdown',
+    html.Div(id='farm_history', children=[
+        html.Div(className='farm_graph_container', children=[
+            dcc.Dropdown(id='farm_line_plot_dropdown',
                 options=[
                     {'label': 'Temperature', 'value': 'Temperature (C)'},
                     {'label': 'Apparnet Temp', 'value': 'Apparent Temperature (C)'},
@@ -141,7 +139,7 @@ DASHBOARD_FARM = html.Div(id='major_container', children=[
                 clearable = False
             ),
             dcc.Graph(
-                id='dynamic_plot',
+                id='farm_line_plot',
                 figure=line_temp_fig,
                 config={
                     'displayModeBar': False
@@ -151,13 +149,11 @@ DASHBOARD_FARM = html.Div(id='major_container', children=[
     ])
 ])
 
-#App Layout
-app.layout = DASHBOARD_FARM
 
 # Camera Callback
-@app.callback(
+@callback(
     Output(component_id='farm_image', component_property='src'),
-    Input(component_id='camera_dropdown', component_property='value')
+    Input(component_id='farm_camera_dropdown', component_property='value')
 )
 def update_image(option):
     src='assets/img1.jpg'
@@ -166,9 +162,9 @@ def update_image(option):
     return src
 
 # Plot Callback
-@app.callback(
-    Output(component_id='dynamic_plot', component_property='figure'),
-    Input(component_id='line_plot_dropdown', component_property='value')
+@callback(
+    Output(component_id='farm_line_plot', component_property='figure'),
+    Input(component_id='farm_line_plot_dropdown', component_property='value')
 )
 def update_plot(option):
     title='Temperature (C)'
@@ -235,7 +231,3 @@ def update_plot(option):
         ]
     )
     return line_plot
-
-
-if __name__ == '__main__':
-    app.run_server(debug=True)
