@@ -8,7 +8,7 @@ import dash_daq as daq
 
 #data import
 weather_data = pd.read_csv('weatherHistory.csv')
-
+weather_data = weather_data[['Formatted Date', 'Temperature (C)', 'Apparent Temperature (C)', 'Humidity', 'Wind Speed (km/h)', 'Wind Bearing (degrees)', 'Visibility (km)', 'Loud Cover', 'Pressure (millibars)']]
 #data Formatting
 weather_data['Formatted Date'] = pd.to_datetime(weather_data['Formatted Date'].str[:-10])
 weather_data = weather_data.sort_values(by='Formatted Date', ascending=False)
